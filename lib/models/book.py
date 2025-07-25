@@ -6,7 +6,7 @@ class Book:
     all = {}
     statuses = ["To Read", "Reading", "Finished", "Did Not Finish"]
 
-    def __init__(self, author, page_count, status, genre_id, started_date=None, finished_date=None):
+    def __init__(self, author, page_count, status, genre_id, started_date=None, finished_date=None, id=None):
         self.id = id
         self.author = author
         self.page_count = page_count
@@ -134,17 +134,3 @@ class Book:
     
     def genre(self):
         pass
-    
-        
-    
-
-
-        
-
-    
-
-
-
-    
-
-
