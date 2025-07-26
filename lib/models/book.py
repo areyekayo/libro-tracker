@@ -6,8 +6,9 @@ class Book:
     all = {}
     statuses = ["To Read", "Reading", "Finished", "Did Not Finish"]
 
-    def __init__(self, author, page_count, status, genre_id, started_date=None, finished_date=None, id=None):
+    def __init__(self, title, author, page_count, status, genre_id, started_date=None, finished_date=None, id=None):
         self.id = id
+        self.title = title
         self.author = author
         self.page_count = page_count
         self.status = status
@@ -15,6 +16,15 @@ class Book:
         self.started_date = started_date
         self.finished_date = finished_date
     
+    @property
+    def title(self):
+        return self._title
+    @title.setter
+    def title(self, title):
+        if isinstance(title, str) and title:
+            self._title = title
+        else: raise ValueError("Title must be a non-empty string.")
+
     @property
     def author(self):
         return self._author
@@ -51,9 +61,11 @@ class Book:
         sql = """
             CREATE TABLE IF NOT EXISTS books (
             id INTEGER PRIMARY KEY,
+            title TEXT,
             author TEXT,
             page_count INTEGER,
             status TEXT,
+            genre_id INTEGER,
             started_date TEXT,
             finished_date TEXT,
             FOREIGN KEY (genre_id) REFERENCES genres(id)
@@ -72,10 +84,10 @@ class Book:
 
     def save(self):
         sql = """
-            INSERT INTO books (author, page_count, status, genre_id, started_date, finished_date)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO books (title, author, page_count, status, genre_id, started_date, finished_date)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """
-        CURSOR.execute(sql, (self.author, self.page_count, self.status, self.genre_id, self.started_date, self.finished_date))
+        CURSOR.execute(sql, (self.title, self.author, self.page_count, self.status, self.genre_id, self.started_date, self.finished_date))
         CONN.commit()
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
@@ -83,12 +95,12 @@ class Book:
     def update(self):
         sql = """
             UPDATE books
-            SET author = ?, page_count = ?, status = ?, genre_id = ?, 
+            SET title = ?, author = ?, page_count = ?, status = ?, genre_id = ?, 
             started_date = ?, finished_date = ?
             WHERE id = ?
         """
-        CURSOR.execute(sql, (self.author, self.page_count, self.status, 
-                             self.   genre_id, self.started_date, self.finished_date, self.id))
+        CURSOR.execute(sql, (self.title, self.author, self.page_count, 
+                             self.status, self.genre_id, self.started_date, self.finished_date, self.id))
         CONN.commit()
     
     def delete(self):
@@ -102,8 +114,8 @@ class Book:
         self.id = None
 
     @classmethod
-    def create(cls, author, page_count, status, genre_id, started_date, finished_date):
-        book = cls(author, page_count, status, genre_id, started_date, finished_date)
+    def create(cls, title, author, page_count, status, genre_id, started_date, finished_date):
+        book = cls(title, author, page_count, status, genre_id, started_date, finished_date)
         book.save()
         return book
     
@@ -111,14 +123,15 @@ class Book:
     def instance_from_db(cls, row):
         book = cls.all.get(row[0])
         if book:
-            book.author = row[1]
-            book.page_count = row[2]
-            book.status = row[3]
-            book.genre_id = row[4]
-            book.started_date = row[5]
-            book.finished_date = row[6]
+            book.title = row[1]
+            book.author = row[2]
+            book.page_count = row[3]
+            book.status = row[4]
+            book.genre_id = row[5]
+            book.started_date = row[6]
+            book.finished_date = row[7]
         else:
-            book = cls(row[1], row[2], row[3], row[4], row[5], row[6])
+            book = cls(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
             book.id = row[0]
             cls.all[book.id] = book
         return book
