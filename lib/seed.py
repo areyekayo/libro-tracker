@@ -25,6 +25,14 @@ def seed_database():
     book8 = Book.create("Plainwater: Essays and Poetry", "Anne Carson", 260, "Finished", poetry.id, "2025-02-15", "2025-03-01")
     book9 = Book.create("Perdido Street Station", "China Mieville", 867, "Did Not Finish", sci_fi_fantasy.id, "2025-06-13", None)
     book10 = Book.create("The Sirens' Call", "Chris Hayes", 336, "To Read", non_fiction.id, None, None)
+    book11 = Book.create("A Memory Called Empire", "Arkady Martine", 462, "Finished", sci_fi_fantasy.id, "2025-02-27", "2025-03-18")
+    book12 = Book.create("Hyperion", "Dan Simmons", 482, "Finished", sci_fi_fantasy.id, "2025-04-09", "2025-05-30")
+    book13 = Book.create("A Psalm for the Wild-Built", "Becky Chambers",160, "Finished", sci_fi_fantasy.id, "2025-06-16", "2025-06-27")
+    book14 = Book.create("A Prayer for the Crown-Shy", "Becky Chambers",160, "Finished", sci_fi_fantasy.id, "2025-06-28", "2025-07-05")
+    book15 = Book.create("Lovingkindness", "Sharon Salzberg",208, "To Read", mindfulness.id, None, None)
+    book16 = Book.create("Radical Acceptance", "Tara Brach", 384, "To Read", mindfulness.id, None, None)
+    
+
 
 seed_database()
 
