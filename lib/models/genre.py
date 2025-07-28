@@ -75,6 +75,37 @@ class Genre:
             cls.all[genre.id] = genre
         return genre
     
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+            SELECT *
+            FROM genres
+            WHERE id = ?
+        """
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+
+    
+    @classmethod
+    def get_all(cls):
+        sql = """
+            SELECT * 
+            FROM genres
+        """
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows]
+    
+    def books(self):
+        from models.book import Book
+        sql = """
+            SELECT * 
+            FROM books
+            WHERE genre_id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+        rows = CURSOR.fetchall()
+        return [Book.instance_from_db(row) for row in rows]
+    
     
 
     

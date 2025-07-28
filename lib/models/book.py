@@ -146,4 +146,6 @@ class Book:
         return [cls.instance_from_db(row) for row in rows]
     
     def genre(self):
-        pass
+        from models.genre import Genre
+        genre = Genre.find_by_id(self.genre_id)
+        return genre
