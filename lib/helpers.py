@@ -57,7 +57,12 @@ def select_book(genre: Genre, status):
         return None
 
     def book_display(book: Book):
-        return f"{book.title} by {book.author}, {book.page_count} pages"
+        if status == "Reading" or status == "Did Not Finish":
+            return f"{book.title} by {book.author}, {book.page_count} pages. Started reading: {book.started_date}."
+        elif status == "Finished":
+            return f"{book.title} by {book.author}, {book.page_count} pages. Started reading: {book.started_date}. Finished reading: {book.finished_date}."
+        else:
+            return f"{book.title} by {book.author}, {book.page_count} pages"
     
     book = select_from_list(book_list, book_display, "\nSelect a book, or 0 to go back:")
 

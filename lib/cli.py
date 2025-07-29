@@ -28,16 +28,18 @@ def menu():
 
 def genre_menu(genre):
     in_genre_menu = True
+    print(f"\n *** {genre.name.upper()} ***")
+    print(f"    {genre.description}\n")
     while in_genre_menu:
-        print(f"\n *** {genre.name.upper()} ***")
-        print(f"    {genre.description}\n")
-        print("Select an option below, or 0 to go back:")
-        print("     1. Add New Book")
+        print("Options: ")
+        print("     1. Add New Book To Genre")
         print("     2. See Currently Reading Books")
         print("     3. See 'To Read' Books")
         print("     4. See 'Finished' Books")
         print("     5. See 'Did Not Finish' Books")
+        print("     6. Edit Genre")
         book = None
+        print("Select an option number, or 0 to go back:")
         choice = input("> ")
         if choice == "1":
             book = create_book(genre)
@@ -55,7 +57,6 @@ def genre_menu(genre):
             book = select_book(genre, "Did Not Finish")
         elif choice == "0":
             in_genre_menu = False
-            break
         else:
             print("Invalid choice, please try again.")
             
