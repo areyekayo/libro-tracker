@@ -6,18 +6,20 @@ def exit_program():
     print("Goodbye!")
     exit()
 
-def select_from_list(items, item_display_func=str, prompt="Select an option (or 0 to go back):\n>"):
+def select_from_list(items, item_display_func=str, prompt="\nSelect an option (or 0 to go back):"):
     """
     Displays a numbered list of items and prompt user to select one within a loop, validates user input, and returns the selected item.
     """
     if not items:
         return None
     
-    print(prompt)
     for i, item in enumerate(items, start=1):
         print(f"    {i}. {item_display_func(item)}")
     
-    while True:
+    print(prompt)
+
+    choice = ""
+    while choice != 0:
         try:
             choice = int(input(">"))
             if choice == 0:
@@ -37,14 +39,30 @@ def select_new_book_status():
 
     return status
 
-def select_genre():
+def select_genre(prompt="Select a genre, or 0 to go back:"):
     genres = Genre.get_all()
 
     def genre_display(genre):
-        return f"{genre.name}—{len(genre.books())} books"
+        return f"{genre.name}, {len(genre.books())} books"
     
-    genre = select_from_list(genres, genre_display, "Select a genre, or 0 to go back: ")
+    genre = select_from_list(genres, genre_display, prompt)
     return genre
+
+def select_book(genre: Genre, status):
+    books = genre.books()
+    book_list = [book for book in books if book.status == status]
+
+    if not book_list:
+        print(f"    No books in {status} status!")
+        return None
+
+    def book_display(book: Book):
+        return f"{book.title} by {book.author}, {book.page_count} pages"
+    
+    book = select_from_list(book_list, book_display, "\nSelect a book, or 0 to go back:")
+
+    return book
+
 
 def create_book(genre):
     """Creates a new book."""
@@ -67,6 +85,7 @@ def create_book(genre):
     try:
         book = Book.create(title, author, page_count, status, genre.id, started_date, finished_date)
         print(f"Successfully created new {genre.name} book: {book.title} by {book.author}, {page_count} pages")
+        return book
     except Exception as exc:
         print(f"Error creating the book: {exc}\n")
 

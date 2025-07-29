@@ -4,47 +4,65 @@ from helpers import (
     exit_program,
     create_book,
     select_genre,
-    select_from_list
+    select_from_list,
+    select_book
 )
 
 
 def main():
-    while True:
-        menu()
-        choice = input("> ")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            genre_menu()
-        else:
-            print("Invalid choice")
-
-def menu():
-    print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Genres")
-
-def genre_menu():
-    print("*** GENRE MENU ***")
-    print("-------------------")
+    print("\nWelcome to Libro Tracker!\n")
     genre = ""
     while genre != None:
-        print("Select a genre, or press 0 to go back:\n>")
-        genre = select_genre()
-        if genre:
-            choice = ""
-            print(f"Selected {genre.name}. Please select an option, or 0 to go back:\n")
-            print("     1. Add Book")
-            choice = input(">")
-            while choice != "0":
-                if choice == "1":
-                     book = create_book(genre)
-                     return book
+        print("*** GENRES ***")
+        genre = select_genre("\nSelect a genre number, or 0 to exit the program:")
+        if genre == None or genre == "0":
+            exit_program()
+        elif genre:
+            genre_menu(genre)
+        else:
+            print("Invalid choice, please try again.")
+        
 
+def menu():
+    print("\nWelcome to Libro Tracker!\n")
+
+def genre_menu(genre):
+    in_genre_menu = True
+    while in_genre_menu:
+        print(f"\n *** {genre.name.upper()} ***")
+        print(f"    {genre.description}\n")
+        print("Select an option below, or 0 to go back:")
+        print("     1. Add New Book")
+        print("     2. See Currently Reading Books")
+        print("     3. See 'To Read' Books")
+        print("     4. See 'Finished' Books")
+        print("     5. See 'Did Not Finish' Books")
+        book = None
+        choice = input("> ")
+        if choice == "1":
+            book = create_book(genre)
+        elif choice == "2":
+            print("Books you're currently reading: ")
+            book = select_book(genre, "Reading")
+        elif choice == "3":
+            print("Books you haven't read yet: ")
+            book = select_book(genre, "To Read")
+        elif choice == "4":
+            print("Books you've finished reading: ")
+            book = select_book(genre, "Finished")
+        elif choice == "5":
+            print("Books you did not finish:")
+            book = select_book(genre, "Did Not Finish")
+        elif choice == "0":
+            in_genre_menu = False
+            break
+        else:
+            print("Invalid choice, please try again.")
             
-
-
-
+        if not book:
+            continue
+        if book:
+            pass
 
 
 if __name__ == "__main__":
