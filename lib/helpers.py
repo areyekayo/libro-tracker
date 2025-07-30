@@ -42,7 +42,7 @@ def select_new_book_status():
 def select_genre(prompt="Select a genre, or 0 to go back:"):
     genres = Genre.get_all()
 
-    def genre_display(genre):
+    def genre_display(genre: Genre):
         return f"{genre.name}, {len(genre.books())} books"
     
     genre = select_from_list(genres, genre_display, prompt)
@@ -68,20 +68,20 @@ def select_book(genre: Genre, status):
 
     return book
 
-
-def create_book(genre):
+def create_book(genre: Genre):
     """Creates a new book."""
-    title = input("Enter the book's title: ")
-    author = input("Enter the author's name: ")
-    page_count = int(input("Enter the number of pages: "))
+    print(f"Adding a new to {genre.name}...\n")
+    title = input("     Enter the book's title: ")
+    author = input("        Enter the author's name: ")
+    page_count = int(input("    Enter the number of pages: "))
     status = select_new_book_status()
 
     if status == "Did Not Finish" or status == "Reading":
-        started_date = input(f"What date did you start reading {title}? Enter date in YYYY-MM-DD format:\n>")
+        started_date = input(f"     What date did you start reading '{title}'? Enter date in YYYY-MM-DD format:\n>")
 
     elif status == "Finished":
-        started_date = input(f"What date did you start reading {title}? Enter date in YYYY-MM-DD format:\n>")
-        finished_date = input(f"What date did you finish reading {title}? Enter date in YYYY-MM-DD format:\n>")
+        started_date = input(f"     What date did you start reading '{title}'? Enter date in YYYY-MM-DD format:\n>")
+        finished_date = input(f"    What date did you finish reading '{title}'? Enter date in YYYY-MM-DD format:\n>")
 
     else:
         started_date = None
@@ -89,7 +89,7 @@ def create_book(genre):
 
     try:
         book = Book.create(title, author, page_count, status, genre.id, started_date, finished_date)
-        print(f"Successfully created new {genre.name} book: {book.title} by {book.author}, {page_count} pages")
+        print(f"\nSuccessfully created new {genre.name} book: {book.title} by {book.author}, {page_count} pages")
         return book
     except Exception as exc:
         print(f"Error creating the book: {exc}\n")

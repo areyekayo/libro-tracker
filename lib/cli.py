@@ -27,11 +27,11 @@ def menu():
     print("\nWelcome to Libro Tracker!\n")
 
 def genre_menu(genre):
-    in_genre_menu = True
-    print(f"\n *** {genre.name.upper()} ***")
-    print(f"    {genre.description}\n")
-    while in_genre_menu:
-        print("Options: ")
+    choice = ""
+    while choice != "0":
+        print(f"\n *** {genre.name.upper()} ***")
+        print(f"    {genre.description}\n")
+        print("What would you like to do in this genre?: ")
         print("     1. Add New Book To Genre")
         print("     2. See Currently Reading Books")
         print("     3. See 'To Read' Books")
@@ -55,8 +55,6 @@ def genre_menu(genre):
         elif choice == "5":
             print("Books you did not finish:")
             book = select_book(genre, "Did Not Finish")
-        elif choice == "0":
-            in_genre_menu = False
         else:
             print("Invalid choice, please try again.")
             
