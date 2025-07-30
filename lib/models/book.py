@@ -6,15 +6,14 @@ class Book:
     all = {}
     statuses = ["To Read", "Reading", "Finished", "Did Not Finish"]
 
-    def __init__(self, title, author, page_count, status, genre_id, started_date=None, finished_date=None, id=None):
+    def __init__(self, title, author, page_count, status, genre_id, id=None):
         self.id = id
         self.title = title
         self.author = author
         self.page_count = page_count
         self.status = status
         self.genre_id = genre_id
-        self.started_date = started_date
-        self.finished_date = finished_date
+
     
     @property
     def title(self):
@@ -66,8 +65,6 @@ class Book:
             page_count INTEGER,
             status TEXT,
             genre_id INTEGER,
-            started_date TEXT,
-            finished_date TEXT,
             FOREIGN KEY (genre_id) REFERENCES genres(id)
         )
         """
@@ -84,10 +81,10 @@ class Book:
 
     def save(self):
         sql = """
-            INSERT INTO books (title, author, page_count, status, genre_id, started_date, finished_date)
+            INSERT INTO books (title, author, page_count, status, genre_id)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """
-        CURSOR.execute(sql, (self.title, self.author, self.page_count, self.status, self.genre_id, self.started_date, self.finished_date))
+        CURSOR.execute(sql, (self.title, self.author, self.page_count, self.status, self.genre_id))
         CONN.commit()
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
@@ -95,12 +92,11 @@ class Book:
     def update(self):
         sql = """
             UPDATE books
-            SET title = ?, author = ?, page_count = ?, status = ?, genre_id = ?, 
-            started_date = ?, finished_date = ?
+            SET title = ?, author = ?, page_count = ?, status = ?, genre_id = ?
             WHERE id = ?
         """
         CURSOR.execute(sql, (self.title, self.author, self.page_count, 
-                             self.status, self.genre_id, self.started_date, self.finished_date, self.id))
+                             self.status, self.genre_id, self.id))
         CONN.commit()
     
     def delete(self):
@@ -114,8 +110,8 @@ class Book:
         self.id = None
 
     @classmethod
-    def create(cls, title, author, page_count, status, genre_id, started_date, finished_date):
-        book = cls(title, author, page_count, status, genre_id, started_date, finished_date)
+    def create(cls, title, author, page_count, status, genre_id):
+        book = cls(title, author, page_count, status, genre_id)
         book.save()
         return book
     
@@ -128,10 +124,8 @@ class Book:
             book.page_count = row[3]
             book.status = row[4]
             book.genre_id = row[5]
-            book.started_date = row[6]
-            book.finished_date = row[7]
         else:
-            book = cls(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+            book = cls(row[1], row[2], row[3], row[4], row[5])
             book.id = row[0]
             cls.all[book.id] = book
         return book

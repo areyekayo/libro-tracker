@@ -1,6 +1,7 @@
 # lib/helpers.py
 from models.book import Book
 from models.genre import Genre
+from datetime import date
 
 def exit_program():
     print("Goodbye!")
@@ -30,12 +31,12 @@ def select_from_list(items, item_display_func=str, prompt="\nSelect an option (o
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
-def select_new_book_status():
+def select_book_status():
     statuses = Book.statuses
     def status_display(status):
         return f"{status}"
     
-    status = select_from_list(statuses, status_display, "Select the status of the new book: \n")
+    status = select_from_list(statuses, status_display, "Select the status of the book: \n")
 
     return status
 
@@ -57,12 +58,7 @@ def select_book(genre: Genre, status):
         return None
 
     def book_display(book: Book):
-        if status == "Reading" or status == "Did Not Finish":
-            return f"{book.title} by {book.author}, {book.page_count} pages. Started reading: {book.started_date}."
-        elif status == "Finished":
-            return f"{book.title} by {book.author}, {book.page_count} pages. Started reading: {book.started_date}. Finished reading: {book.finished_date}."
-        else:
-            return f"{book.title} by {book.author}, {book.page_count} pages"
+        return f"{book.title} by {book.author}, {book.page_count} pages"
     
     book = select_from_list(book_list, book_display, "\nSelect a book, or 0 to go back:")
 
@@ -74,21 +70,10 @@ def create_book(genre: Genre):
     title = input("     Enter the book's title: ")
     author = input("        Enter the author's name: ")
     page_count = int(input("    Enter the number of pages: "))
-    status = select_new_book_status()
-
-    if status == "Did Not Finish" or status == "Reading":
-        started_date = input(f"     What date did you start reading '{title}'? Enter date in YYYY-MM-DD format:\n>")
-
-    elif status == "Finished":
-        started_date = input(f"     What date did you start reading '{title}'? Enter date in YYYY-MM-DD format:\n>")
-        finished_date = input(f"    What date did you finish reading '{title}'? Enter date in YYYY-MM-DD format:\n>")
-
-    else:
-        started_date = None
-        finished_date = None
+    status = select_book_status()
 
     try:
-        book = Book.create(title, author, page_count, status, genre.id, started_date, finished_date)
+        book = Book.create(title, author, page_count, status, genre.id)
         print(f"\nSuccessfully created new {genre.name} book: {book.title} by {book.author}, {page_count} pages")
         return book
     except Exception as exc:
@@ -112,8 +97,15 @@ def update_book_details(book: Book):
         
         book.update()
         print(f"\nSuccessfully updated book: '{book.title}' by {book.author}, {book.page_count} pages.")
-        
+
     except Exception as exc:
         print(f"Error updating book: {exc}")
 
-
+def update_book_reading_status(book: Book):
+    print(f"\n {book.title} current status: {book.status}")
+    print("\n Select a new status:")
+    new_status = select_book_status()
+    book.status = new_status
+    
+    book.update()
+    print(f"Successfully updated {book.title} status: {book.status}")

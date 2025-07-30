@@ -6,7 +6,8 @@ from helpers import (
     select_genre,
     select_from_list,
     select_book,
-    update_book_details
+    update_book_details,
+    update_book_reading_status
 )
 
 
@@ -74,7 +75,7 @@ def book_menu(book):
     while choice is not None:
         print(f"\n*** Selected {book.title} by {book.author}. Current status: {book.status} *** ")
         print("What would you like to do?")
-        print("     1. Update Book Title, Author, or Page Count")
+        print("     1. Update Title, Author, or Page Count")
         print("     2. Update Reading Status")
         print("Select an option, or 0 to go back:")
         choice = input("> ")
@@ -83,8 +84,7 @@ def book_menu(book):
         elif choice == "1":
             update_book_details(book)
         elif choice == "2":
-            print("Start reading...")
-            pass
+            update_book_reading_status(book)
 
             
 
