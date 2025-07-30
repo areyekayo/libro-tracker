@@ -5,15 +5,16 @@ from helpers import (
     create_book,
     select_genre,
     select_from_list,
-    select_book
+    select_book,
+    update_book_details
 )
 
 
 def main():
     print("\nWelcome to Libro Tracker!\n")
     genre = ""
-    while genre != None:
-        print("*** GENRES ***")
+    while genre is not None:
+        print("\n*** GENRES ***")
         genre = select_genre("\nSelect a genre number, or 0 to exit the program:")
         if genre == None or genre == "0":
             exit_program()
@@ -28,7 +29,7 @@ def menu():
 
 def genre_menu(genre):
     choice = ""
-    while choice != "0":
+    while choice is not None:
         print(f"\n *** {genre.name.upper()} ***")
         print(f"    {genre.description}\n")
         print("What would you like to do in this genre?: ")
@@ -38,9 +39,13 @@ def genre_menu(genre):
         print("     4. See 'Finished' Books")
         print("     5. See 'Did Not Finish' Books")
         print("     6. Edit Genre")
-        book = None
         print("Select an option number, or 0 to go back:")
         choice = input("> ")
+        if choice == "0":
+            choice = None
+            break
+
+        book = None
         if choice == "1":
             book = create_book(genre)
         elif choice == "2":
@@ -57,11 +62,33 @@ def genre_menu(genre):
             book = select_book(genre, "Did Not Finish")
         else:
             print("Invalid choice, please try again.")
-            
+            continue
+
         if not book:
             continue
-        if book:
+
+        book_menu(book)
+            
+def book_menu(book):
+    choice = ""
+    while choice is not None:
+        print(f"\n*** Selected {book.title} by {book.author}. Current status: {book.status} *** ")
+        print("What would you like to do?")
+        print("     1. Update Book Title, Author, or Page Count")
+        print("     2. Update Reading Status")
+        print("Select an option, or 0 to go back:")
+        choice = input("> ")
+        if choice == "0":
+            choice = None
+        elif choice == "1":
+            update_book_details(book)
+        elif choice == "2":
+            print("Start reading...")
             pass
+
+            
+
+
 
 
 if __name__ == "__main__":
