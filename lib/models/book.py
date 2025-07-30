@@ -1,5 +1,4 @@
 from models.__init__ import CURSOR, CONN
-from datetime import datetime, date
 
 class Book:
 
@@ -82,7 +81,7 @@ class Book:
     def save(self):
         sql = """
             INSERT INTO books (title, author, page_count, status, genre_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
         """
         CURSOR.execute(sql, (self.title, self.author, self.page_count, self.status, self.genre_id))
         CONN.commit()

@@ -1,7 +1,6 @@
 # lib/helpers.py
 from models.book import Book
 from models.genre import Genre
-from datetime import date
 
 def exit_program():
     print("Goodbye!")
