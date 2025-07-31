@@ -57,30 +57,31 @@ def select_book(genre: Genre, status):
         return None
 
     def book_display(book: Book):
-        return f"{book.title} by {book.author}, {book.page_count} pages"
+        return f"'{book.title}' by {book.author}, {book.page_count} pages"
     
     book = select_from_list(book_list, book_display, "\nSelect a book, or 0 to go back:")
 
     return book
 
 def create_book(genre: Genre):
-    """Creates a new book."""
-    print(f"Adding a new to {genre.name}...\n")
-    title = input("     Enter the book's title: ")
-    author = input("        Enter the author's name: ")
-    page_count = int(input("    Enter the number of pages: "))
+    """Creates a new book within a genre."""
+    print(f"\nAdding a new {genre.name} book...")
+    title = input("Enter the book's title: ")
+    author = input("Enter the author's name: ")
+    page_count = int(input("Enter the number of pages: "))
+    print("Book statuses: ")
     status = select_book_status()
 
     try:
         book = Book.create(title, author, page_count, status, genre.id)
-        print(f"\nSuccessfully created new {genre.name} book: {book.title} by {book.author}, {page_count} pages")
+        print(f"\nSuccessfully created new {genre.name} book: '{book.title}' by {book.author}, {page_count} pages")
         return book
     except Exception as exc:
         print(f"Error creating the book: {exc}\n")
 
 def update_book_details(book: Book):
     try:
-        print(f"\nCurrent title: {book.title}")
+        print(f"\nCurrent title: '{book.title}'")
         title = input("Enter the updated title, or press 'enter' to keep current title: ")
         print(f"\nCurrent author: {book.author}")
         author = input("Enter the updated author's name, or press 'enter' to keep current author: ")
@@ -101,25 +102,34 @@ def update_book_details(book: Book):
         print(f"Error updating book: {exc}")
 
 def update_book_reading_status(book: Book):
-    print(f"\n{book.title} current status: {book.status}")
+    print(f"\n'{book.title}' current status: {book.status}")
     print("\nSelect a new status: ")
     new_status = select_book_status()
     book.status = new_status
     
     book.update()
-    print(f"Successfully updated {book.title} status: {book.status}")
+    print(f"Successfully updated '{book.title}' status: {book.status}")
 
-def get_total_pages_read(genre: Genre):
+def get_genre_total_pages_read(genre: Genre):
     """Gets the count of total pages read for finished books in a genre."""
     books = genre.books()
     pages_read = sum(book.page_count for book in books if book.status == "Finished")
     return pages_read
 
-def get_total_books_read(genre: Genre):
+def get_genre_total_books_read(genre: Genre):
     """Gets the count of total finished books in a genre."""
     books = genre.books()
     books_read = len([book for book in books if book.status == "Finished"])
     return books_read
+
+def get_book_status_counts(genre: Genre):
+    """Gets a count of all current book statuses within a genre to display in CLI."""
+    status_counts = {status: 0 for status in Book.statuses}
+
+    for book in genre.books():
+        if book.status in status_counts:
+            status_counts[book.status] += 1
+    return status_counts
 
 def delete_book(book: Book):
     print(f"\nDeleting '{book.title}' by {book.author}...")

@@ -8,8 +8,9 @@ from helpers import (
     select_book,
     update_book_details,
     update_book_reading_status,
-    get_total_pages_read,
-    get_total_books_read,
+    get_genre_total_pages_read,
+    get_genre_total_books_read,
+    get_book_status_counts,
     delete_book
 )
 
@@ -20,31 +21,27 @@ def main():
     while genre is not None:
         print("\n*** GENRES ***")
         genre = select_genre("\nSelect a genre number, or 0 to exit the program:")
-        if genre == None or genre == "0":
-            exit_program()
-        elif genre:
+
+        if genre:
             genre_menu(genre)
         else:
-            print("Invalid choice, please try again.")
-        
-
-def menu():
-    print("\nWelcome to Libro Tracker!\n")
+            exit_program()
 
 def genre_menu(genre):
-    pages_read = get_total_pages_read(genre)
-    books_read = get_total_books_read(genre)
     choice = ""
-    print(f"\n *** {genre.name.upper()} ***")
-    print(f"{genre.description}")
-    print(f"\nYou've read {books_read} books, totaling {pages_read} pages in this genre!")
-    while choice is not None:
+    while choice is not None:    
+        pages_read = get_genre_total_pages_read(genre)
+        books_read = get_genre_total_books_read(genre)
+        status_counts = get_book_status_counts(genre)
+        print(f"\n *** {genre.name.upper()} ***")
+        print(f"{genre.description}")
+        print(f"\nYou've read {books_read} books, totaling {pages_read} pages in this genre!")
         print(f"\nOptions for {genre.name} genre: ")
         print("     1. Add New Book To Genre")
-        print("     2. See Currently Reading Books")
-        print("     3. See 'To Read' Books")
-        print("     4. See 'Finished' Books")
-        print("     5. See 'Did Not Finish' Books")
+        print(f"     2. See `Currently Reading` Books ({status_counts.get('Reading')} books)")
+        print(f"     3. See 'To Read' Books ({status_counts.get('To Read')} books)")
+        print(f"     4. See 'Finished' Books ({status_counts.get('Finished')} books)")
+        print(f"     5. See 'Did Not Finish' Books ({status_counts.get('Did Not Finish')} books)")
         print("     6. Edit Genre")
         print("Select an option number, or 0 to go back:")
         choice = input("> ")
@@ -54,16 +51,16 @@ def genre_menu(genre):
         elif choice == "1":
             book = create_book(genre)
         elif choice == "2":
-            print("Books you're currently reading: ")
+            print(f"\n{genre.name} books you're currently reading: ")
             book = select_book(genre, "Reading")
         elif choice == "3":
-            print("Books you haven't read yet: ")
+            print(f"\n{genre.name} books you haven't read yet: ")
             book = select_book(genre, "To Read")
         elif choice == "4":
-            print("Books you've finished reading: ")
+            print(f"\n{genre.name} books you've finished reading: ")
             book = select_book(genre, "Finished")
         elif choice == "5":
-            print("Books you did not finish:")
+            print(f"\n{genre.name} books you did not finish:")
             book = select_book(genre, "Did Not Finish")
         else:
             print("Invalid choice, please try again.")
@@ -93,11 +90,6 @@ def book_menu(book):
         elif choice == "3":
             delete_book(book)
             break
-
-            
-
-
-
 
 if __name__ == "__main__":
     main()
