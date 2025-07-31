@@ -7,7 +7,9 @@ from helpers import (
     select_from_list,
     select_book,
     update_book_details,
-    update_book_reading_status
+    update_book_reading_status,
+    get_total_pages_read,
+    get_total_books_read
 )
 
 
@@ -29,11 +31,14 @@ def menu():
     print("\nWelcome to Libro Tracker!\n")
 
 def genre_menu(genre):
+    pages_read = get_total_pages_read(genre)
+    books_read = get_total_books_read(genre)
     choice = ""
+    print(f"\n *** {genre.name.upper()} ***")
+    print(f"{genre.description}")
+    print(f"\nYou've read {books_read} books, totaling {pages_read} pages in this genre!")
     while choice is not None:
-        print(f"\n *** {genre.name.upper()} ***")
-        print(f"    {genre.description}\n")
-        print("What would you like to do in this genre?: ")
+        print(f"\nOptions for {genre.name} genre: ")
         print("     1. Add New Book To Genre")
         print("     2. See Currently Reading Books")
         print("     3. See 'To Read' Books")
@@ -42,12 +47,10 @@ def genre_menu(genre):
         print("     6. Edit Genre")
         print("Select an option number, or 0 to go back:")
         choice = input("> ")
+        book = None
         if choice == "0":
             choice = None
-            break
-
-        book = None
-        if choice == "1":
+        elif choice == "1":
             book = create_book(genre)
         elif choice == "2":
             print("Books you're currently reading: ")
@@ -74,7 +77,7 @@ def book_menu(book):
     choice = ""
     while choice is not None:
         print(f"\n*** Selected {book.title} by {book.author}. Current status: {book.status} *** ")
-        print("What would you like to do?")
+        print("\nWhat would you like to do?")
         print("     1. Update Title, Author, or Page Count")
         print("     2. Update Reading Status")
         print("Select an option, or 0 to go back:")

@@ -13,7 +13,6 @@ class Book:
         self.status = status
         self.genre_id = genre_id
 
-    
     @property
     def title(self):
         return self._title

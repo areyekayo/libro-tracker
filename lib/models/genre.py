@@ -85,7 +85,6 @@ class Genre:
         row = CURSOR.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
-    
     @classmethod
     def get_all(cls):
         sql = """

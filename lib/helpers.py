@@ -101,10 +101,23 @@ def update_book_details(book: Book):
         print(f"Error updating book: {exc}")
 
 def update_book_reading_status(book: Book):
-    print(f"\n {book.title} current status: {book.status}")
-    print("\n Select a new status:")
+    print(f"\n{book.title} current status: {book.status}")
+    print("\nSelect a new status: ")
     new_status = select_book_status()
     book.status = new_status
     
     book.update()
     print(f"Successfully updated {book.title} status: {book.status}")
+
+def get_total_pages_read(genre: Genre):
+    """Gets the count of total pages read for finished books in a genre."""
+    books = genre.books()
+    pages_read = sum(book.page_count for book in books if book.status == "Finished")
+    return pages_read
+
+def get_total_books_read(genre: Genre):
+    """Gets the count of total finished books in a genre."""
+    books = genre.books()
+    books_read = len([book for book in books if book.status == "Finished"])
+    return books_read
+
