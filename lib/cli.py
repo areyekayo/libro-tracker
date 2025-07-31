@@ -14,7 +14,6 @@ from helpers import (
     delete_book
 )
 
-
 def main():
     print("\nWelcome to Libro Tracker!\n")
     genre = ""
@@ -29,13 +28,10 @@ def main():
 
 def genre_menu(genre):
     choice = ""
-    while choice is not None:    
-        pages_read = get_genre_total_pages_read(genre)
-        books_read = get_genre_total_books_read(genre)
-        status_counts = get_book_status_counts(genre)
+    while choice != "0":
         print(f"\n *** {genre.name.upper()} ***")
-        print(f"{genre.description}")
-        print(f"\nYou've read {books_read} books, totaling {pages_read} pages in this genre!")
+        genre_stats(genre)
+        status_counts = get_book_status_counts(genre)
         print(f"\nOptions for {genre.name} genre: ")
         print("     1. Add New Book To Genre")
         print(f"     2. See `Currently Reading` Books ({status_counts.get('Reading')} books)")
@@ -43,12 +39,11 @@ def genre_menu(genre):
         print(f"     4. See 'Finished' Books ({status_counts.get('Finished')} books)")
         print(f"     5. See 'Did Not Finish' Books ({status_counts.get('Did Not Finish')} books)")
         print("     6. Edit Genre")
+        print("     7. Show Description")
         print("Select an option number, or 0 to go back:")
         choice = input("> ")
         book = None
-        if choice == "0":
-            choice = None
-        elif choice == "1":
+        if choice == "1":
             book = create_book(genre)
         elif choice == "2":
             print(f"\n{genre.name} books you're currently reading: ")
@@ -62,7 +57,11 @@ def genre_menu(genre):
         elif choice == "5":
             print(f"\n{genre.name} books you did not finish:")
             book = select_book(genre, "Did Not Finish")
-        else:
+        elif choice == "6":
+            pass
+        elif choice == "7":
+            print(f"{genre.description}")
+        elif choice != "0":
             print("Invalid choice, please try again.")
             continue
 
@@ -90,6 +89,12 @@ def book_menu(book):
         elif choice == "3":
             delete_book(book)
             break
+
+def genre_stats(genre):
+    pages_read = get_genre_total_pages_read(genre)
+    books_read = get_genre_total_books_read(genre)
+    print(f"  Books read: {books_read}")
+    print(f"  Total pages read: {pages_read}")
 
 if __name__ == "__main__":
     main()
