@@ -121,3 +121,12 @@ def get_total_books_read(genre: Genre):
     books_read = len([book for book in books if book.status == "Finished"])
     return books_read
 
+def delete_book(book: Book):
+    print(f"\nDeleting '{book.title}' by {book.author}...")
+    try:
+        book.delete()
+        print(f"Successfully deleted '{book.title}'!")
+        print("Returning to genre menu...")
+    except Exception as exc:
+        print(f"\nError deleting book: {exc}")
+

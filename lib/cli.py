@@ -9,7 +9,8 @@ from helpers import (
     update_book_details,
     update_book_reading_status,
     get_total_pages_read,
-    get_total_books_read
+    get_total_books_read,
+    delete_book
 )
 
 
@@ -76,10 +77,11 @@ def genre_menu(genre):
 def book_menu(book):
     choice = ""
     while choice is not None:
-        print(f"\n*** Selected {book.title} by {book.author}. Current status: {book.status} *** ")
+        print(f"\n*** Selected {book.title} by {book.author}, {book.page_count} pages. Current status: {book.status} *** ")
         print("\nWhat would you like to do?")
         print("     1. Update Title, Author, or Page Count")
         print("     2. Update Reading Status")
+        print("     3. Delete Book")
         print("Select an option, or 0 to go back:")
         choice = input("> ")
         if choice == "0":
@@ -88,6 +90,9 @@ def book_menu(book):
             update_book_details(book)
         elif choice == "2":
             update_book_reading_status(book)
+        elif choice == "3":
+            delete_book(book)
+            break
 
             
 
