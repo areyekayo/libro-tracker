@@ -11,7 +11,8 @@ from helpers import (
     get_genre_total_pages_read,
     get_genre_total_books_read,
     get_book_status_counts,
-    delete_book
+    delete_book,
+    create_genre
 )
 
 def main():
@@ -21,7 +22,9 @@ def main():
         print("\n*** GENRES ***")
         genre = select_genre("\nSelect a genre number, or 0 to exit the program:")
 
-        if genre:
+        if genre == "Add new genre":
+            genre = create_genre()
+        elif genre:
             genre_menu(genre)
         else:
             exit_program()

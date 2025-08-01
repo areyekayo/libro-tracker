@@ -41,9 +41,13 @@ def select_book_status():
 
 def select_genre(prompt="Select a genre, or 0 to go back:"):
     genres = Genre.get_all()
+    genres.append("Add new genre")
 
-    def genre_display(genre: Genre):
-        return f"{genre.name}, {len(genre.books())} books"
+    def genre_display(item):
+        if isinstance(item, Genre):
+            return f"{item.name}, {len(item.books())} books"
+        else:
+            return f"{item}"
     
     genre = select_from_list(genres, genre_display, prompt)
     return genre
@@ -139,4 +143,17 @@ def delete_book(book: Book):
         print("Returning to genre menu...")
     except Exception as exc:
         print(f"\nError deleting book: {exc}")
+
+def create_genre():
+    print(f"\nAdding a new genre...")
+    name = input("Enter the genre's name: ")
+    description = input("Enter a short description for the genre: ")
+
+    try:
+        genre = Genre.create(name, description)
+        print(f"\nSuccessfully created {genre.name} genre.")
+        return genre
+    except Exception as exc:
+        print(f"\nError creating genre: {exc}")
+
 
