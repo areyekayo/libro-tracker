@@ -105,6 +105,15 @@ class Genre:
         rows = CURSOR.fetchall()
         return [Book.instance_from_db(row) for row in rows]
     
+    def update(self):
+        sql = """
+            UPDATE genres
+            SET name = ?, description = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.description, self.id))
+        CONN.commit()
+    
     
 
     

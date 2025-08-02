@@ -21,7 +21,7 @@ def select_from_list(items, item_display_func=str, prompt="\nSelect an option (o
     choice = ""
     while choice != 0:
         try:
-            choice = int(input(">"))
+            choice = int(input("> "))
             if choice == 0:
                 return None
             if 1 <= choice <= len(items):
@@ -31,6 +31,7 @@ def select_from_list(items, item_display_func=str, prompt="\nSelect an option (o
             print("Invalid input. Please enter a valid number.")
 
 def select_book_status():
+    """Displays book statuses to be selected in the CLI."""
     statuses = Book.statuses
     def status_display(status):
         return f"{status}"
@@ -40,12 +41,13 @@ def select_book_status():
     return status
 
 def select_genre(prompt="Select a genre, or 0 to go back:"):
+    """Displays existing genres and count of their books, or option to add new genre, and calls select_from_list to display in CLI."""
     genres = Genre.get_all()
     genres.append("Add new genre")
 
     def genre_display(item):
         if isinstance(item, Genre):
-            return f"{item.name}, {len(item.books())} books"
+            return f"{item.name} ({len(item.books())} books)"
         else:
             return f"{item}"
     
@@ -53,11 +55,12 @@ def select_genre(prompt="Select a genre, or 0 to go back:"):
     return genre
 
 def select_book(genre: Genre, status):
+    """Displays existing books within a genre, and calls select_from_list to display in CLI."""
     books = genre.books()
     book_list = [book for book in books if book.status == status]
 
     if not book_list:
-        print(f"    No books in {status} status!")
+        print(f"    No books in '{status}' status!")
         return None
 
     def book_display(book: Book):
@@ -84,6 +87,7 @@ def create_book(genre: Genre):
         print(f"Error creating the book: {exc}\n")
 
 def update_book_details(book: Book):
+    """Updates a book's title, author, and/or page count."""
     try:
         print(f"\nCurrent title: '{book.title}'")
         title = input("Enter the updated title, or press 'enter' to keep current title: ")
@@ -106,6 +110,7 @@ def update_book_details(book: Book):
         print(f"Error updating book: {exc}")
 
 def update_book_reading_status(book: Book):
+    """Updates a book's reading status."""
     print(f"\n'{book.title}' current status: {book.status}")
     print("\nSelect a new status: ")
     new_status = select_book_status()
@@ -133,6 +138,7 @@ def get_book_status_counts(genre: Genre):
     for book in genre.books():
         if book.status in status_counts:
             status_counts[book.status] += 1
+
     return status_counts
 
 def delete_book(book: Book):
@@ -155,5 +161,29 @@ def create_genre():
         return genre
     except Exception as exc:
         print(f"\nError creating genre: {exc}")
+
+def update_genre(genre: Genre):
+    print("\nUpdating genre...")
+    try:
+        print(f"Genre's current name: {genre.name}")
+        name = input("Enter a new name, or press 'enter' to keep current name: ")
+        print(f"\nGenre's current description: {genre.description}")
+        description = input("Enter a new description, or press 'enter' to keep current description: ")
+
+        if name.strip() != "":
+            genre.name = name
+        if description.strip() != "":
+            genre.description = description
+        
+        genre.update()
+        print(f"\nSuccessfully updated genre: {genre.name}")
+        print(f"Description: '{genre.description}")
+    except Exception as exc:
+        print(f"\nError updating genre: {exc}")
+
+
+    
+
+
 
 
