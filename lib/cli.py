@@ -7,12 +7,12 @@ from helpers import (
     select_book,
     update_book_details,
     update_book_reading_status,
-    get_genre_total_pages_read,
-    get_genre_total_books_read,
     get_book_status_counts,
     delete_book,
     create_genre,
-    update_genre
+    update_genre,
+    genre_stats,
+    delete_genre
 )
 
 def main():
@@ -37,12 +37,13 @@ def genre_menu(genre):
         status_counts = get_book_status_counts(genre)
         print(f"\nOptions for {genre.name} genre: ")
         print("     1. Add New Book To Genre")
-        print(f"     2. See `Currently Reading` Books ({status_counts.get('Reading')} books)")
+        print(f"     2. See 'Currently Reading' Books ({status_counts.get('Reading')} books)")
         print(f"     3. See 'To Read' Books ({status_counts.get('To Read')} books)")
         print(f"     4. See 'Finished' Books ({status_counts.get('Finished')} books)")
         print(f"     5. See 'Did Not Finish' Books ({status_counts.get('Did Not Finish')} books)")
         print("     6. Edit Genre")
         print("     7. Show Description")
+        print("     8. Delete Genre")
         print("Select an option number, or 0 to go back:")
         choice = input("> ")
         book = None
@@ -64,6 +65,9 @@ def genre_menu(genre):
             update_genre(genre)
         elif choice == "7":
             print(f"Genre Description: {genre.description}")
+        elif choice == "8":
+            delete_genre(genre)
+            break
         elif choice != "0":
             print("Invalid choice, please try again.")
 
@@ -75,7 +79,7 @@ def genre_menu(genre):
 def book_menu(book):
     choice = ""
     while choice != "0":
-        print(f"\n*** Selected {book.title} by {book.author}, {book.page_count} pages. Current status: {book.status} *** ")
+        print(f"\n*** Selected '{book.title}' by {book.author}, {book.page_count} pages. Current status: {book.status} *** ")
         print("\nWhat would you like to do?")
         print("     1. Update Title, Author, or Page Count")
         print("     2. Update Reading Status")
@@ -89,14 +93,8 @@ def book_menu(book):
         elif choice == "3":
             delete_book(book)
             break
-        else:
+        elif choice != "0":
             print("Invalid option, please try again.")
-
-def genre_stats(genre):
-    pages_read = get_genre_total_pages_read(genre)
-    books_read = get_genre_total_books_read(genre)
-    print(f"  Books read: {books_read}")
-    print(f"  Total pages read: {pages_read}")
 
 if __name__ == "__main__":
     main()

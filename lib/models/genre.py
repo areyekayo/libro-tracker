@@ -1,6 +1,5 @@
 from models.__init__ import CURSOR, CONN
 
-
 class Genre:
     all = {}
 
@@ -113,6 +112,16 @@ class Genre:
         """
         CURSOR.execute(sql, (self.name, self.description, self.id))
         CONN.commit()
+
+    def delete(self):
+        sql = """
+            DELETE from genres
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+        del type(self).all[self.id]
+        self.id = None
     
     
 

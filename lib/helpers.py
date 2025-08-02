@@ -40,10 +40,11 @@ def select_book_status():
 
     return status
 
-def select_genre(prompt="Select a genre, or 0 to go back:"):
+def select_genre(prompt="Select a genre, or 0 to go back:", genres=None):
     """Displays existing genres and count of their books, or option to add new genre, and calls select_from_list to display in CLI."""
-    genres = Genre.get_all()
-    genres.append("Add new genre")
+    if not genres:
+        genres = Genre.get_all()
+        genres.append("Add new genre")
 
     def genre_display(item):
         if isinstance(item, Genre):
@@ -180,8 +181,34 @@ def update_genre(genre: Genre):
         print(f"Description: '{genre.description}")
     except Exception as exc:
         print(f"\nError updating genre: {exc}")
+    
+def delete_genre(genre: Genre):
+    print("\nDeleting genre...")
+    books = genre.books()
+    try:
+        if genre.books():
+            print(f"\nThis genre has {len(books)} books that need to be assigned a new genre: ")
+            genres = [g for g in Genre.get_all() if g.id != genre.id]
+            book_list = [print(f"   '{book.title}' by {book.author}") for book in books]
+            print("\nAvailable genres: ")
+            new_genre = select_genre("Select a new genre for these books: ", genres)
+            print(f"\nAssigning books to {new_genre.name} genre...")
+            for book in books:
+                book.genre_id = new_genre.id
+                book.update()
+        
+        genre.delete()
+        print(f"\nSuccessfully deleted {genre.name} genre.")
+        
+    except Exception as exc:
+        print(f"\nError deleting genre: {exc}")
 
 
+def genre_stats(genre):
+    pages_read = get_genre_total_pages_read(genre)
+    books_read = get_genre_total_books_read(genre)
+    print(f"  Books read: {books_read}")
+    print(f"  Total pages read: {pages_read}")
     
 
 
