@@ -189,7 +189,7 @@ def delete_genre(genre: Genre):
         if genre.books():
             print(f"\nThis genre has {len(books)} books that need to be assigned a new genre: ")
             genres = [g for g in Genre.get_all() if g.id != genre.id]
-            book_list = [print(f"   '{book.title}' by {book.author}") for book in books]
+            print(*(f"   '{book.title}' by {book.author}" for book in books), sep="\n")
             print("\nAvailable genres: ")
             new_genre = select_genre("Select a new genre for these books: ", genres)
             print(f"\nAssigning books to {new_genre.name} genre...")
