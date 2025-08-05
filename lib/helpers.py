@@ -132,7 +132,7 @@ def get_genre_total_books_read(genre: Genre):
     books_read = len([book for book in books if book.status == "Finished"])
     return books_read
 
-def get_book_status_counts(genre: Genre):
+def book_status_counts(genre: Genre):
     """Gets a count of all current book statuses within a genre to display in CLI."""
     status_counts = {status: 0 for status in Book.statuses}
 
@@ -168,7 +168,7 @@ def update_genre(genre: Genre):
     try:
         print(f"Genre's current name: {genre.name}")
         name = input("Enter a new name, or press 'enter' to keep current name: ")
-        print(f"\nGenre's current description: {genre.description}")
+        print(f"\nGenre's current description: '{genre.description}'")
         description = input("Enter a new description, or press 'enter' to keep current description: ")
 
         if name.strip() != "":
@@ -178,7 +178,7 @@ def update_genre(genre: Genre):
         
         genre.update()
         print(f"\nSuccessfully updated genre: {genre.name}")
-        print(f"Description: '{genre.description}")
+        print(f"Description: '{genre.description}'")
     except Exception as exc:
         print(f"\nError updating genre: {exc}")
     
@@ -204,7 +204,7 @@ def delete_genre(genre: Genre):
         print(f"\nError deleting genre: {exc}")
 
 
-def genre_stats(genre):
+def genre_stats(genre: Genre):
     pages_read = get_genre_total_pages_read(genre)
     books_read = get_genre_total_books_read(genre)
     print(f"  Books read: {books_read}")
