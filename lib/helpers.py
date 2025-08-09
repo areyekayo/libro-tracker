@@ -255,23 +255,26 @@ def genre_menu_prompt(genre):
         print(f"     {opt_num}. {description}")
 
     print("Select an option number, or 0 to go back:")
-    choice = input("> ")
-
-    if choice == "0":
-        return "0", None
     
     # Map choice input to actions, to be used to CLI genre menu flow
     choice_map = {opt_num: action for opt_num, action, _ in options}
-    
-    if choice not in choice_map:
-        print("Invalid choice, please try again.")
-        return None, None
+    choice = ""
+    while choice != "0":
+        choice = input("> ")
 
-    action = choice_map[choice]
-    book = None
+        if choice == "0":
+            return "0", None 
+            # "0" must be returned here to exit the CLI genre menu loop
+        
+        if choice not in choice_map:
+            print("Invalid choice, please try again.")
+            continue
 
-    if action in ("Reading", "To Read", "Finished", "Did Not Finish"):
-        print(f"\n{genre.name} books with status '{action}':")
-        book = select_book(genre, action)
+        action = choice_map[choice]
+        book = None
 
-    return action, book
+        if action in ("Reading", "To Read", "Finished", "Did Not Finish"):
+            print(f"\n{genre.name} books with status '{action}':")
+            book = select_book(genre, action)
+
+        return action, book
