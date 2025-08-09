@@ -3,10 +3,10 @@ from models.book import Book
 from models.genre import Genre
 
 def exit_program():
-    print("Goodbye!")
+    print("Goodbye! Go read some books!")
     exit()
 
-def select_from_list(items, item_display_func=str, prompt="\nSelect an option (or 0 to go back):"):
+def select_from_list(items, item_display_func, prompt="\nSelect an option (or 0 to go back):"):
     """
     Displays a numbered list of items and prompt user to select one within a loop, validates user input, and returns the selected item.
     """
@@ -41,8 +41,8 @@ def select_book_status():
     return status
 
 def select_genre(prompt="Select a genre, or 0 to go back:", genres=None):
-    """Displays existing genres and count of their books, or option to add new genre, and calls select_from_list to display in CLI."""
-    if not genres:
+    """Displays existing genres and count of their books, or option to add new genre, and calls select_from_list to display in CLI. A list of genres may be passed from delete_genre function when books need to be reassigned to another genre."""
+    if not genres:  # if genres are not passed, then this is being called by main() in cli.py
         genres = Genre.get_all()
         genres.append("Add new genre")
 
@@ -56,13 +56,9 @@ def select_genre(prompt="Select a genre, or 0 to go back:", genres=None):
     return genre
 
 def select_book(genre: Genre, status):
-    """Displays existing books within a genre, and calls select_from_list to display in CLI."""
+    """Displays existing books by status within a genre, and calls select_from_list to display in CLI."""
     books = genre.books()
     book_list = [book for book in books if book.status == status]
-
-    if not book_list:
-        print(f"    No books in '{status}' status!")
-        return None
 
     def book_display(book: Book):
         return f"'{book.title}' by {book.author}, {book.page_count} pages"
@@ -112,7 +108,7 @@ def update_book_details(book: Book):
 
 def update_book_reading_status(book: Book):
     """Updates a book's reading status."""
-    print(f"\n'{book.title}' current status: {book.status}")
+    print(f"\nUpdating '{book.title}' current status: {book.status}")
     print("\nSelect a new status: ")
     new_status = select_book_status()
     book.status = new_status
@@ -143,6 +139,7 @@ def book_status_counts(genre: Genre):
     return status_counts
 
 def delete_book(book: Book):
+    """Deletes a book."""
     print(f"\nDeleting '{book.title}' by {book.author}...")
     try:
         book.delete()
@@ -152,6 +149,7 @@ def delete_book(book: Book):
         print(f"\nError deleting book: {exc}")
 
 def create_genre():
+    """Creates a new genre."""
     print(f"\nAdding a new genre...")
     name = input("Enter the genre's name: ")
     description = input("Enter a short description for the genre: ")
@@ -164,6 +162,7 @@ def create_genre():
         print(f"\nError creating genre: {exc}")
 
 def update_genre(genre: Genre):
+    """Updates a genre's name and description."""
     print("\nUpdating genre...")
     try:
         print(f"Genre's current name: {genre.name}")
@@ -183,6 +182,7 @@ def update_genre(genre: Genre):
         print(f"\nError updating genre: {exc}")
     
 def delete_genre(genre: Genre):
+    """Deletes a genre. If there are books assigned to the genre, user will be prompted to reassign the books to another genre."""
     print("\nDeleting genre...")
     books = genre.books()
     try:
@@ -205,6 +205,7 @@ def delete_genre(genre: Genre):
 
 
 def genre_stats(genre: Genre):
+    """Gets counts of the total number of books and pages (book status = "Finished") that have been read in a genre."""
     pages_read = get_genre_total_pages_read(genre)
     books_read = get_genre_total_books_read(genre)
     print(f"  Books read: {books_read}")

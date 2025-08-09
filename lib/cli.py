@@ -16,7 +16,7 @@ from helpers import (
 )
 
 def main():
-    print("\nWelcome to Libro Tracker!\n")
+    print("\nWelcome to Libro Tracker!")
     genre = ""
     while genre is not None:
         print("\n*** MAIN MENU ***")
@@ -30,6 +30,7 @@ def main():
             exit_program()
 
 def genre_menu(genre):
+    """Displays dyanmic options for a genre, including showing books by reading status. If there are no books in a reading status, that status will not be shown in the options."""
     choice = ""
     while choice != "0":
         print(f"\n *** {genre.name.upper()} GENRE MENU ***")
@@ -41,7 +42,7 @@ def genre_menu(genre):
         number = 1
 
         # Each option item will have a number to select, an action key, and descrition to display. 
-        # Always add "Add New Book To Genre" as option 1. 
+        #  "Add New Book To Genre" will always be option 1. 
         options.append((str(number), "add_book", "Add New Book To Genre"))
         number += 1
 
@@ -84,7 +85,7 @@ def genre_menu(genre):
             if action == "add_book":
                 book = create_book(genre)
             elif action in ("Reading", "To Read", "Finished", "Did Not Finish"):
-                print(f"\n{genre.name} books with status '{action}':")
+                print(f"\n'{action}' {genre.name} books:")
                 book = select_book(genre, action)
             elif action == "edit_genre":
                 update_genre(genre)
@@ -102,6 +103,7 @@ def genre_menu(genre):
         book_menu(book)
             
 def book_menu(book):
+    """Displays options for a book."""
     choice = ""
     while choice != "0":
         print(f"\n*** '{book.title}' by {book.author}, {book.page_count} pages. Current status: {book.status} *** ")
