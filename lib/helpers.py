@@ -40,11 +40,12 @@ def select_book_status():
 
     return status
 
-def select_genre(prompt="Select a genre, or 0 to go back:", genres=None):
+def select_genre(prompt="Select a genre, or 0 to go back:", genre_options=None):
     """Displays existing genres and count of their books, or option to add new genre, and calls select_from_list to display in CLI. A list of genres may be passed from delete_genre function when books need to be reassigned to another genre."""
-    if not genres:  # if genres are not passed, then this is being called by main() in cli.py
-        genres = Genre.get_all()
-        genres.append("Add new genre")
+    if not genre_options:  
+        # If genre_options are not passed, this is being called by main in CLI, and option to add new genre should be displayed along with all genre objects
+        genre_options = Genre.get_all()
+        genre_options.append("Add new genre")
 
     def genre_display(item):
         if isinstance(item, Genre):
@@ -52,7 +53,7 @@ def select_genre(prompt="Select a genre, or 0 to go back:", genres=None):
         else:
             return f"{item}"
     
-    genre = select_from_list(genres, genre_display, prompt)
+    genre = select_from_list(genre_options, genre_display, prompt)
     return genre
 
 def select_book(genre: Genre, status):
@@ -211,7 +212,7 @@ def genre_stats(genre: Genre):
     print(f"  Total pages read: {pages_read}")
 
 
-def genre_menu_prompt(genre):
+def genre_menu_prompt(genre: Genre):
     """
     Displays dynamic options for a genre (without looping),
     returns a tuple (action, book) based on user choice.
@@ -225,7 +226,7 @@ def genre_menu_prompt(genre):
     options = []
     number = 1
 
-    # Each option item will have a number to select, an action key, and descrition to display. 
+    # Each option item will have a number to select, an option name, and descrition to display. 
     # "Add New Book To Genre" will always be option 1.
     options.append((str(number), "add_book", "Add New Book To Genre"))
     number += 1
@@ -257,7 +258,7 @@ def genre_menu_prompt(genre):
     print("Select an option number, or 0 to go back:")
     
     # Map choice input to actions, to be used to CLI genre menu flow
-    choice_map = {opt_num: action for opt_num, action, _ in options}
+    choice_map = {opt_num: option for opt_num, option, _ in options}
     choice = ""
     while choice != "0":
         choice = input("> ")
@@ -270,11 +271,11 @@ def genre_menu_prompt(genre):
             print("Invalid choice, please try again.")
             continue
 
-        action = choice_map[choice]
+        option = choice_map[choice]
         book = None
 
-        if action in ("Reading", "To Read", "Finished", "Did Not Finish"):
-            print(f"\n{genre.name} books with status '{action}':")
-            book = select_book(genre, action)
+        if option in ("Reading", "To Read", "Finished", "Did Not Finish"):
+            print(f"\n{genre.name} books with status '{option}':")
+            book = select_book(genre, option)
 
-        return action, book
+        return option, book

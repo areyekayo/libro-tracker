@@ -28,20 +28,17 @@ def main():
             exit_program()
 
 def genre_menu(genre):
-    action = ""
-    while action != "0":
-        action, book = genre_menu_prompt(genre)
+    choice = ""
+    while choice != "0":
+        choice, book = genre_menu_prompt(genre)
 
-        if action is None and book is None:
-            # If both are none, user entered invalid input
-            continue
-        elif action == "add_book":
+        if choice == "add_book":
             book = create_book(genre)
-        elif action == "edit_genre":
+        elif choice == "edit_genre":
             update_genre(genre)
-        elif action == "show_desc":
+        elif choice == "show_desc":
             print(f"Genre Description: {genre.description}")
-        elif action == "delete_genre":
+        elif choice == "delete_genre":
             delete_genre(genre)
             break
 
