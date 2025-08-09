@@ -33,8 +33,8 @@ def select_from_list(items, item_display_func, prompt="\nSelect an option (or 0 
 def select_book_status():
     """Displays book statuses to be selected in the CLI."""
     statuses = Book.statuses
-    def status_display(status):
-        return f"{status}"
+
+    status_display = lambda status: f"{status}"
     
     status = select_from_list(statuses, status_display, "Select the status of the book: \n")
 
@@ -60,8 +60,7 @@ def select_book(genre: Genre, status):
     books = genre.books()
     book_list = [book for book in books if book.status == status]
 
-    def book_display(book: Book):
-        return f"'{book.title}' by {book.author}, {book.page_count} pages"
+    book_display = lambda book: f"'{book.title}' by {book.author}, {book.page_count} pages"
     
     book = select_from_list(book_list, book_display, "\nSelect a book, or 0 to go back:")
 
@@ -210,8 +209,69 @@ def genre_stats(genre: Genre):
     books_read = get_genre_total_books_read(genre)
     print(f"  Books read: {books_read}")
     print(f"  Total pages read: {pages_read}")
+
+
+def genre_menu_prompt(genre):
+    """
+    Displays dynamic options for a genre (without looping),
+    returns a tuple (action, book) based on user choice.
+    """
+    print(f"\n *** {genre.name.upper()} GENRE MENU ***")
+    genre_stats(genre)  # show number of books and pages read
+    status_counts = book_status_counts(genre)  # get counts of books in each status
+
+    # Start empty option array and option number to list dynamic options if a genre has no books in some statuses
+    print(f"\nOptions for {genre.name} genre: ")
+    options = []
+    number = 1
+
+    # Each option item will have a number to select, an action key, and descrition to display. 
+    # "Add New Book To Genre" will always be option 1.
+    options.append((str(number), "add_book", "Add New Book To Genre"))
+    number += 1
+
+     # Book options to show only if book status count is > 0 for the genre
+    status_options = [
+        ("Reading", "Currently Reading"),
+        ("To Read", "To Read"),
+        ("Finished", "Finished"),
+        ("Did Not Finish", "Did Not Finish")
+    ]
+    # Append book status to options list if status count > 0
+    for status_key, label in status_options:
+        count = status_counts.get(status_key, 0)
+        if count > 0:
+            options.append((str(number), status_key, f"See '{label}' Books ({count} books)"))
+            number += 1
+
+    # Add other fixed options for the genre
+    options.extend([
+        (str(number), "edit_genre", "Edit Genre"),
+        (str(number + 1), "show_desc", "Show Genre Description"),
+        (str(number + 2), "delete_genre", "Delete Genre"),
+    ])
+
+    for opt_num, _, description in options:
+        print(f"     {opt_num}. {description}")
+
+    print("Select an option number, or 0 to go back:")
+    choice = input("> ")
+
+    if choice == "0":
+        return "0", None
     
+    # Map choice input to actions, to be used to CLI genre menu flow
+    choice_map = {opt_num: action for opt_num, action, _ in options}
+    
+    if choice not in choice_map:
+        print("Invalid choice, please try again.")
+        return None, None
 
+    action = choice_map[choice]
+    book = None
 
+    if action in ("Reading", "To Read", "Finished", "Did Not Finish"):
+        print(f"\n{genre.name} books with status '{action}':")
+        book = select_book(genre, action)
 
-
+    return action, book
