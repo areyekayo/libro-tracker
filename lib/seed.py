@@ -1,4 +1,3 @@
-from models.__init__ import CONN, CURSOR
 from models.book import Book
 from models.genre import Genre
 
@@ -31,10 +30,5 @@ def seed_database():
     book14 = Book.create("A Prayer for the Crown-Shy", "Becky Chambers",160, "Finished", sci_fi_fantasy.id)
     book15 = Book.create("Lovingkindness", "Sharon Salzberg",208, "To Read", mindfulness.id)
     book16 = Book.create("Radical Acceptance", "Tara Brach", 384, "To Read", mindfulness.id)
-    
-
 
 seed_database()
-
-
-
