@@ -88,25 +88,24 @@ def update_book_details(book: Book):
     try:
         print(f"\nCurrent title: '{book.title}'")
         title = input("Enter the updated title, or press 'enter' to keep current title: ")
+
         print(f"\nCurrent author: {book.author}")
         author = input("Enter the updated author's name, or press 'enter' to keep current author: ")
+
         print(f"\nCurrent page count: {book.page_count}")
         page_count = input("Enter the updated page count, or press 'enter' to keep current page count: ")
+
         genre = Genre.find_by_id(book.genre_id)
         print(f"\nCurrent genre: {genre.name}")
-        new_genre = select_genre("Select a new genre: ", Genre.get_all())
+        new_genre = select_genre("Select a new genre, or 0 to keep current genre: ", [g for g in Genre.get_all() if g.id != book.genre_id])
         
-        if title.strip() != "":
-            book.title = title
-        if author.strip() != "":
-            book.author = author
-        if page_count.strip() != "":
-            book.page_count = int(page_count)
-        
-        book.genre_id = new_genre.id
+        if title.strip() != "": book.title = title
+        if author.strip() != "": book.author = author
+        if page_count.strip() != "": book.page_count = int(page_count)
+        if new_genre is not None: book.genre_id = new_genre.id
         
         book.update()
-        print(f"\nSuccessfully updated book: '{book.title}' by {book.author}, genre: {new_genre.name}, {book.page_count} pages")
+        print(f"\nSuccessfully updated book: '{book.title}' by {book.author}, genre: {Genre.find_by_id(book.genre_id).name}, {book.page_count} pages")
 
     except Exception as exc:
         print(f"Error updating book: {exc}")
@@ -219,8 +218,7 @@ def genre_stats(genre: Genre):
 
 def genre_menu_prompt(genre: Genre):
     """
-    Displays dynamic options for a genre (without looping),
-    returns a tuple (action, book) based on user choice.
+    Displays dynamic options for a genre, returns a tuple (selected option, book) based on user choice.
     """
     print(f"\n *** {genre.name.upper()} GENRE MENU ***")
     genre_stats(genre)  # show number of books and pages read
@@ -270,7 +268,7 @@ def genre_menu_prompt(genre: Genre):
 
         if choice == "0":
             return "0", None 
-            # "0" must be returned here to exit the CLI genre menu loop
+            # "0" must be returned here to exit the CLI genre menu loop that called this function
         
         if choice not in choice_map:
             print("Invalid choice, please try again.")
