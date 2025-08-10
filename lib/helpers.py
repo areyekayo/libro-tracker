@@ -84,7 +84,7 @@ def create_book(genre: Genre):
         print(f"Error creating the book: {exc}\n")
 
 def update_book_details(book: Book):
-    """Updates a book's title, author, and/or page count."""
+    """Updates a book's title, author, page count, and/or genre."""
     try:
         print(f"\nCurrent title: '{book.title}'")
         title = input("Enter the updated title, or press 'enter' to keep current title: ")
@@ -92,6 +92,9 @@ def update_book_details(book: Book):
         author = input("Enter the updated author's name, or press 'enter' to keep current author: ")
         print(f"\nCurrent page count: {book.page_count}")
         page_count = input("Enter the updated page count, or press 'enter' to keep current page count: ")
+        genre = Genre.find_by_id(book.genre_id)
+        print(f"\nCurrent genre: {genre.name}")
+        new_genre = select_genre("Select a new genre: ", Genre.get_all())
         
         if title.strip() != "":
             book.title = title
@@ -100,8 +103,10 @@ def update_book_details(book: Book):
         if page_count.strip() != "":
             book.page_count = int(page_count)
         
+        book.genre_id = new_genre.id
+        
         book.update()
-        print(f"\nSuccessfully updated book: '{book.title}' by {book.author}, {book.page_count} pages.")
+        print(f"\nSuccessfully updated book: '{book.title}' by {book.author}, genre: {new_genre.name}, {book.page_count} pages")
 
     except Exception as exc:
         print(f"Error updating book: {exc}")

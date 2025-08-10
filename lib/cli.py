@@ -51,17 +51,17 @@ def book_menu(book):
     """Displays options for a book."""
     choice = ""
     while choice != "0":
-        print(f"\n*** '{book.title}' by {book.author}, {book.page_count} pages. Current status: {book.status} *** ")
+        print(f"\n*** '{book.title}' by {book.author}, {book.page_count} pages. Current reading status: {book.status} *** ")
         print("\nWhat would you like to do with this book?")
-        print("     1. Update Title, Author, or Page Count")
-        print("     2. Update Reading Status")
+        print("     1. Update Reading Status")
+        print("     2. Update Title, Author, Page Count, or Genre")
         print("     3. Delete Book")
         print("Select an option, or 0 to go back:")
         choice = input("> ")
         if choice == "1":
-            update_book_details(book)
-        elif choice == "2":
             update_book_reading_status(book)
+        elif choice == "2":
+            update_book_details(book)
         elif choice == "3":
             delete_book(book)
             break
