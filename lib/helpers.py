@@ -174,10 +174,8 @@ def update_genre(genre: Genre):
         print(f"\nGenre's current description: '{genre.description}'")
         description = input("Enter a new description, or press 'enter' to keep current description: ")
 
-        if name.strip() != "":
-            genre.name = name
-        if description.strip() != "":
-            genre.description = description
+        if name.strip() != "": genre.name = name
+        if description.strip() != "": genre.description = description
         
         genre.update()
         print(f"\nSuccessfully updated genre: {genre.name}")
@@ -227,7 +225,7 @@ def genre_menu_prompt(genre: Genre):
     genre_stats(genre)  # show number of books and pages read
     status_counts = book_status_counts(genre)  # get counts of books in each status
 
-    # Start empty option array and option number to list dynamic options if a genre has no books in some statuses
+    # Start empty option array and option number
     print(f"\nOptions for {genre.name} genre: ")
     options = []
     number = 1
@@ -237,7 +235,7 @@ def genre_menu_prompt(genre: Genre):
     options.append((str(number), "add_book", "Add New Book To Genre"))
     number += 1
 
-     # Book options to show only if book status count is > 0 for the genre
+    # Book options to show only if book status count is > 0 for the genre
     status_options = [
         ("Reading", "Currently Reading"),
         ("To Read", "To Read"),
