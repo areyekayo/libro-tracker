@@ -72,7 +72,7 @@ def create_book(genre: Genre):
     print(f"\nAdding a new {genre.name} book...")
     title = input("Enter the book's title: ")
     author = input("Enter the author's name: ")
-    page_count = int(input("Enter the number of pages: "))
+    page_count = input("Enter the number of pages: ")
     print("Book statuses: ")
     status = select_book_status()
 
